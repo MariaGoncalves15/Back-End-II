@@ -10,7 +10,7 @@ const buscarUfsPorNome = (nomeUf) => {
 
 app.get('/ufs', (req, res) => {
     const nomeUf = req.query.busca;/*req=requisição, query=o que vai ser passado para a requisição, busca=*/ 
-    const resultado = nomeUf ? buscarUfsPorNome(nomeUf) : buscarUfs;
+    const resultado = nomeUf ? buscarUfsPorNome(nomeUf) : buscarUfs();
     if (resultado.length > 0) {
         res.json(resultado);
     } else {
