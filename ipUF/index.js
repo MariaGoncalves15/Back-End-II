@@ -5,7 +5,6 @@ const app = express();
 
 const buscarUfsPorNome = (nomeUf) => {
     return colecaoUf.filter(uf => uf.nome.toLowerCase().includes(nomeUf.toLowerCase()));
-
 }
 
 app.get('/ufs', (req, res) => {
