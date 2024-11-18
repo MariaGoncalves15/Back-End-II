@@ -52,7 +52,7 @@ app.get('/historicoIPCA', (req, res) => {
     const dadosAno = historicoInflacao.filter(dado => dado.ano === ano);
     return dadosAno.length > 0
       ? res.json(dadosAno)
-      : res.status(404).json({ error: 'Nenhum dado encontrado para este ano, tente novamente!' });
+      : res.status(404).json({ error: 'Nenhum dado encontrado para este ano específico.' });
   }
 
   res.json(historicoInflacao);
