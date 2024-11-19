@@ -1,7 +1,9 @@
 import express from 'express';
 import historicoInflacao from './dados/dados.js';
+import { buscarDadosPorAno, historicoIPCA, calcularValorFornecido } from './servicos/servico.js';
 
 const app = express();
+
 
 app.get('/historicoIPCA/calculo', (req, res) => {
   console.log('Rota de cálculo chamada com parâmetros:', req.query);
@@ -44,17 +46,14 @@ app.get('/historicoIPCA/calculo', (req, res) => {
   });
 });
 
-app.get('/historicoIPCA', (req, res) => {
+app.get('/historicoIPCA/ano', (req, res) => {
   const ano = parseInt(req.query.ano);
-
-  if (!isNaN(ano)) {
-    const dadosAno = historicoInflacao.filter(dado => dado.ano === ano);
-    return dadosAno.length > 0
-      ? res.json(dadosAno)
-      : res.status(404).json({ error: 'Nenhum dado encontrado para este ano específico.' });
+  const resultado = ano ? buscarDadosPorAno(ano): historicoIPCA();
+  if (resultado.length > 0) {
+    res.json(resultado);
+  } else {
+      res.status(404).json({ error: 'Nenhum dado encontrado para este ano específico.' });
   }
-
-  res.json(historicoInflacao);
 });
 
 app.get('/historicoIPCA/:id', (req, res) => {
