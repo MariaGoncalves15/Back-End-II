@@ -9,7 +9,6 @@ export function buscarDadosPorAno(ano) {
     return historicoInflacao.filter(dado => dado.ano === ano);
 }
 
-
 export function calcularMediaAnual(ano) {
     const dadosAno = (ano);
     const soma = dadosAno.reduce((acc, dado) => acc + dado.ipca, 0);

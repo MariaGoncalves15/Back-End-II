@@ -2,7 +2,6 @@ import express from 'express';
 import historicoInflacao from './dados/dados.js';
 
 const app = express();
-const port = 8080;
 
 app.get('/historicoIPCA/calculo', (req, res) => {
   console.log('Rota de cálculo chamada com parâmetros:', req.query);
@@ -75,33 +74,3 @@ app.get('/historicoIPCA/:id', (req, res) => {
 app.listen(8080, () => {
     console.log('Servidor Iniciado na porta 8080');
 }); 
-
-/*app.listen(port, () => {
-  console.log(API rodando na porta ${port});
-});
-/*app.get('/historicoIPCA', (req, res) => {
-    const ano = req.query.busca;/*req=requisição, query=o que vai ser passado para a requisição, busca=
-    const resultado = ano ? buscarDadosPorAno(ano) : historicoIPCA();
-    if (resultado.length > 0) {
-        res.json(resultado);
-    } else {
-        res.status(404).send({"erro": "Nenhuma ano encontrado"});
-    }
-});
-
-
-app.get('/historicoIPCA/:iduf', (req, res) => {
-    const ano = buscarUfPorId(req.params.iduf);
-
-    if (ano) {
-        res.json(ano);
-    }  else if (isNaN(parseInt(req.params.iduf))) {
-        res.status(404).send({"erro": "Requisição inválida"});
-    }  else {
-        res.status(404).send({"Erro": "UF não encontrada" });
-    }
-});
-        
-app.listen(8080, () => {
-    console.log('Servidor Iniciado na porta 8080');
-});*/
