@@ -4,7 +4,6 @@ import { buscarDadosPorAno, historicoIPCA, calcularValorFornecido } from './serv
 
 const app = express();
 
-
 app.get('/historicoIPCA/calculo', (req, res) => {
   console.log('Rota de cálculo chamada com parâmetros:', req.query);
 
@@ -19,7 +18,8 @@ app.get('/historicoIPCA/calculo', (req, res) => {
     isNaN(valorInicial) || isNaN(mesInicial) || isNaN(anoInicial) ||
     isNaN(mesFinal) || isNaN(anoFinal) ||
     mesInicial < 1 || mesInicial > 12 || mesFinal < 1 || mesFinal > 12 ||
-    anoInicial > anoFinal || anoFinal > 2024
+    anoInicial > anoFinal || anoFinal > 2024||
+    anoFinal > anoFinal || anoInicial < 2015
   ) {
     return res.status(400).json({ error: 'Parâmetros inválidos ou fora do intervalo permitido.' });
   }
@@ -72,4 +72,4 @@ app.get('/historicoIPCA/:id', (req, res) => {
 
 app.listen(8080, () => {
     console.log('Servidor Iniciado na porta 8080');
-}); 
+});

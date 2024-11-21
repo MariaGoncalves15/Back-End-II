@@ -1,13 +1,17 @@
 import historicoInflacao from '../dados/dados.js';
 
-
 export function historicoIPCA() {
     return historicoInflacao;
 }
 
-
 export function buscarDadosPorAno(ano) {
     return historicoInflacao.filter(dado => dado.ano === ano);
+}
+
+export function calcularMediaAnual(ano) {
+    const dadosAno = filtrarPorAno(ano);
+    const soma = dadosAno.reduce((acc, dado) => acc + dado.ipca, 0);
+    return dadosAno.length > 0 ? (soma / dadosAno.length).toFixed(2) : 0;
 }
 
 export function calcularValorFornecido(valor, mesInicial, anoInicial, mesFinal, anoFinal, dados) {
@@ -26,5 +30,5 @@ export function calcularValorFornecido(valor, mesInicial, anoInicial, mesFinal, 
 
   
     const valorReajustado = valor * (1 + ipcaTotal / 100);
-    return valorReajustado.toFixed(2);  
+    return valorReajustado.toFixed(2);
 }
