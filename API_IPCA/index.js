@@ -46,7 +46,7 @@ app.get('/historicoIPCA/calculo', (req, res) => {
   });
 });
 
-app.get('/historicoIPCA/ano', (req, res) => {
+app.get('/historicoIPCAmeuAno', (req, res) => {
   const ano = parseInt(req.query.ano);
   const resultado = ano ? buscarDadosPorAno(ano): historicoIPCA();
   if (resultado.length > 0) {
