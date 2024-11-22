@@ -1,6 +1,6 @@
 import express from 'express';
 import historicoInflacao from './dados/dados.js';
-import { buscarDadosPorAno, historicoIPCA, calcularValorFornecido } from './servicos/servico.js';
+import { buscarDadosPorAno, historicoIPCA } from './servicos/servico.js';
 
 const app = express();
 
@@ -46,7 +46,7 @@ app.get('/historicoIPCA/calculo', (req, res) => {
   });
 });
 
-app.get('/historicoIPCAmeuAno', (req, res) => {
+app.get('/historicoIPCA', (req, res) => {
   const ano = parseInt(req.query.ano);
   const resultado = ano ? buscarDadosPorAno(ano): historicoIPCA();
   if (resultado.length > 0) {
