@@ -1,19 +1,41 @@
 import express from 'express';
 import pool from './servico/conexao.js';
-import { retornaCampeonatos, retornaCampeonatosPorId } from './servico/retornaCampeonatos_servico.js';
+import { retornaCampeonatos, retornaCampeonatosPorId, retornacampeonatosPorAno, retornaCampeonatosPorTime} from './servico/retornaCampeonatos_servico.js';
 
 const app = express();
 
 app.get('/campeonatos', async (req, res) => {
-    const campeonatos = await retornaCampeonatos();
-    res.json(campeonatos);
-})
+    let campeonatos;
+
+    const ano = req.query.ano;
+    const time = req.query.time;
+
+    if (typeof ano === 'undefined' && typeof time === 'undefined') {
+        campeonatos = await retornaCampeonatos();
+    }
+    else if (typeof ano !== 'undefined' ){
+        campeonatos = await retornacampeonatosPorAno(ano);
+    } 
+    else if (typeof time !== 'undefined' ){
+        campeonatos = await retornaCampeonatosPorTime(time);
+    }    
+
+    if (campeonatos.length > 0) {
+        res.json(campeonatos);
+    } else {
+        res.status(404).json({ mensagem: "Nenhum campeonato encontrado"});
+    }
+});
 
 app.get('/campeonatos/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     const campeonato = await retornaCampeonatosPorId(id);
-    res.json(campeonato);
-})
+    if (campeonato.length > 0) {
+        res.json(campeonato);
+    } else {
+        res.status(404).json({mensagem: "Nenhum campeonato encontrado"});
+    }
+});
 
 app.listen(9000, async () => {
     const data = new Date();
@@ -24,6 +46,6 @@ app.listen(9000, async () => {
     console.log(conexao.threadId);
 
     conexao.release();*/
-})
+});
 
     
