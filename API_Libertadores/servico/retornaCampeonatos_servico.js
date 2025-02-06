@@ -28,7 +28,7 @@ export async function retornacampeonatosPorAno(ano) {
 export  async function retornaCampeonatosPorTime(time) {
     const conexao = await pool.getConnection();
     const campeonatos_tb = await conexao.query(
-    'SELECT id, campeao, vice, ano FROM campeonatos WHERE campeao = "' + time + '"');
+    "SELECT id, campeao, vice, ano FROM campeonatos WHERE campeao like '%" + time + "%'");
     const campeonatos = campeonatos_tb[0];
     conexao.release();
     return campeonatos;
