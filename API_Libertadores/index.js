@@ -3,14 +3,25 @@ import express from 'express';
 import { retornaCampeonatos, retornaCampeonatosPorId, retornacampeonatosPorAno, retornaCampeonatosPorTime} from './servico/retornaCampeonatos_servico.js';
 import { cadastrarCampeonato } from './servico/cadastroCampeonato_servico.js';
 import { atualizaCampeonatoParcial, atualizarCampeonato } from './servico/atualizaCampeonato_servico.js';
+import { deletaCampeonato } from './servico/deletaCampeonatos_servico.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json()); //Suport para JSON no corpo da requisição   *Para usar no projeto de Front end: para ter o cors =>   npm install cors depois disso, importar o cors import cors from 'cors' e dps colocar o app.use(cors()); //
 
+app.delete('/campeonatos/:id', async (req, res) => {
+    const {id} = req.params;
+    const resultado = await deletaCampeonato(id);
+     if (resultado.affectedRows > 0) {
+        res.status(202).send('Registro deletado com sucesso!');
+     } else {
+        res.status(404).send('Registro não encontrado!');
+     }
+})
+
 app.patch('/campeonatos/:id', async (req, res) => { 
-    const {id} = req.params; //desconstrução
-    const {campeao, vice, ano} = req.body; //desconstrução
+    const {id} = req.params; //desestruturação
+    const {campeao, vice, ano} = req.body; //desestruturação o id como parametro
 
     const camposAtualizar = {};
     if (campeao) camposAtualizar.campeao = campeao;
