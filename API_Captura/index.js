@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import { cadastrarUsuários } from  "./servico/cadastrarUsuários_servico.js";
+import { cadastrarUsuários } from  "./servico/cadastro_servico.js";
+import { cadastrarNome, cadastrarEmail, cadastrarTelefone} from "./validacao/valida.js";
 
 const app = express();
 app.use(cors());
@@ -11,45 +12,32 @@ app.post('/usuários', async (req, res) => {
     const email = req.body.email;
     const telefone = req.body.telefone;
 
-    await cadastrarUsuários(nome, email, telefone);
-    res.status(204).send({"Mensagem": "Cadastro efetivo com sucesso!"});
-    
+    if (!cadastrarNome(nome)) {
+        return res.status(400).send('Não foi possível validar seu nome! retorne com pelo menos 2 caracteres.');
+    } 
+    if (!cadastrarEmail(email)) {
+        return res.status(400).send('Não foi possível validar seu email! retorne dessa forma: email@provedor.com');
+    } 
+    if (!cadastrarTelefone(telefone)) {
+        return res.status(400).send('Não foi possível validar seu telefone! retorne dessa forma: (XX) XXXXX-XXXX');
+    } 
+
+    try {
+        const resultado = await cadastrarUsuários(nome, email, telefone);
+        if (resultado.affectedRows > 0) {
+            return res.status(201).send('Cadastro registrado com sucesso!');
+        } 
+        return res.status(400).send('Ocorreu um erro ao cadastrar usuário!');
+
+    } catch (error) {
+        console.error("Erro ao cadastrar no banco de dados:", error);
+        return res.status(500).send('Erro interno no servidor.');
+    }
+});
+
+
+app.listen(9000, async () => {
+    const data = new Date();
+    console.log('Servidor node iniciado em: ' + data);
 })
-
-// app.get('/campeonatos', async (req, res) => {
-//     let campeonatos;
-
-//     const ano = req.query.ano;
-//     const time = req.query.time;
-
-//     if (typeof ano === 'undefined' && typeof time === 'undefined') {
-//         campeonatos = await retornaCampeonatos();
-//     }
-//     else if (typeof ano !== 'undefined' ){
-//         campeonatos = await retornacampeonatosPorAno(ano);
-//     } 
-//     else if (typeof time !== 'undefined' ){
-//         campeonatos = await retornaCampeonatosPorTime(time);
-//     }    
-
-//     if (campeonatos.length > 0) {
-//         res.json(campeonatos);
-//     } else {
-//         res.status(404).json({ mensagem: "Nenhum campeonato encontrado"});
-//     }
-// });
-
-// app.get('/campeonatos/:id', async (req, res) => {
-//     const id = parseInt(req.params.id);
-//     const campeonato = await retornaCampeonatosPorId(id);
-//     if (campeonato.length > 0) {
-//         res.json(campeonato);
-//     } else {
-//         res.status(404).json({mensagem: "Nenhum campeonato encontrado"});
-//     }
-// });
-
-// app.listen(9000, async () => {
-//     const data = new Date();
-//     console.log("Servidor node iniciado em: "+data)
-// });
+    
