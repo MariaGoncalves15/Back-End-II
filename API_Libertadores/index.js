@@ -4,10 +4,27 @@ import { retornaCampeonatos, retornaCampeonatosPorId, retornacampeonatosPorAno, 
 import { cadastrarCampeonato } from './servico/cadastroCampeonato_servico.js';
 import { atualizaCampeonatoParcial, atualizarCampeonato } from './servico/atualizaCampeonato_servico.js';
 import { deletaCampeonato } from './servico/deletaCampeonatos_servico.js';
+import { ErroEmCapeonatos, ErroEmCapeonatosID } from './servico/ErroEmCampeonatos_servico.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json()); //Suport para JSON no corpo da requisição   *Para usar no projeto de Front end: para ter o cors =>   npm install cors depois disso, importar o cors import cors from 'cors' e dps colocar o app.use(cors()); //
+
+app.get('/campeonatos/:id', async (req, res, next) => {
+    const {id}= req.params;
+    try {
+        const resultado = await ErroEmCapeonatosID(id);
+        res.json(resultado);
+    } catch (error) {
+        res.status(500).json({ mensagem: 'Erro ao buscar dados do id', erro: error.message });
+    }
+});
+
+app.use((err, req, res, next) => {
+    const {campeao, vice, ano} = req.body; 
+    const status = err.statusCode || 500;
+    res.status(status).json({ mensagem:  'Erro ao buscar dados do id', erro: err.message });
+});
 
 app.delete('/campeonatos/:id', async (req, res) => {
     const {id} = req.params;
